@@ -23,4 +23,5 @@ jobs:
 
       - name: Import solution to GhUAT
         run: |
-          pac solution import --path solutions/FirstSolution/FirstSolution.zip --publish-changes --overwrite-unmanaged-customizations
+          pac solution import --path solutions/FirstSolution/FirstSolution.zip --force-overwrite --publish-changes 
+
