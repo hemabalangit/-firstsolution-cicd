@@ -1,0 +1,31 @@
+name: Deploy FirstSolution to GhUAT
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Power Platform CLI
+        run: |
+          dotnet tool install --global Microsoft.PowerApps.CLI.Tool
+
+      - name: Authenticate to Power Platform
+        run: |
+          pac auth create --tenant "${{ secrets.AZURE_TENANT_ID }}" `  
+                          --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
+                          --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
+                          --environment "${{ secrets.POWER_PLATFORM_ENV_URL }}"
+
+      - name: Import solution to GhUAT
+        run: |
+          pac solution import --path solutions/FirstSolution/FirstSolution.zip `
+                              --publish-changes `
+                              --overwrite-unmanaged-customizations
