@@ -1,4 +1,4 @@
-name: Deploy FirstSolution to GhUAT
+name: Deploy FirstSolution to GhUAT1
 
 on:
   push:
