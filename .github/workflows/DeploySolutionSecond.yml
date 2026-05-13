@@ -19,24 +19,29 @@ jobs:
       - name: Install Power Platform CLI
         run: dotnet tool install --global Microsoft.PowerApps.CLI.Tool
 
-      - name: Authenticate to Power Platform
+      - name: Authenticate to GHDev for export
         run: |
           pac auth create `
             --tenant "${{ secrets.AZURE_TENANT_ID }}" `
             --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
             --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
-            --environment "${{ secrets.POWER_PLATFORM_ENV_URL }}"
+            --environment "${{ secrets.POWER_PLATFORM_DEV_ENV_URL }}"
 
-# IMPORTANT:
-      # pac solution export only exports the LAST PUBLISHED version of the solution.
-      # If flows / apps are modified in GHDev but NOT published,
-      # those changes will NOT be included in the exported ZIP.
-      # Always ensure "Publish all customizations" is done in DEV
-      # before triggering this pipeline.
-
+      # IMPORTANT:
+      # pac solution export includes ONLY published components.
+      # For a newly created solution, components must be published
+      # at least once, otherwise export will be empty.
       - name: Export solution from GHDev
         run: |
           pac solution export --name SecondSolution --path solutions --managed false
+
+      - name: Authenticate to GhUAT for import
+        run: |
+          pac auth create `
+            --tenant "${{ secrets.AZURE_TENANT_ID }}" `
+            --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
+            --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
+            --environment "${{ secrets.POWER_PLATFORM_UAT_ENV_URL }}"
 
       - name: Import solution to GhUAT
         run: |
