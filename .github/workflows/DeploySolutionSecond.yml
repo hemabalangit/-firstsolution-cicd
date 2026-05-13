@@ -27,6 +27,13 @@ jobs:
             --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
             --environment "${{ secrets.POWER_PLATFORM_ENV_URL }}"
 
+# IMPORTANT:
+      # pac solution export only exports the LAST PUBLISHED version of the solution.
+      # If flows / apps are modified in GHDev but NOT published,
+      # those changes will NOT be included in the exported ZIP.
+      # Always ensure "Publish all customizations" is done in DEV
+      # before triggering this pipeline.
+
       - name: Export solution from GHDev
         run: |
           pac solution export --name SecondSolution --path solutions --managed false
