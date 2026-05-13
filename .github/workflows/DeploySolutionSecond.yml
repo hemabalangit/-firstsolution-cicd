@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - solutions/SecondSolution/**
+      - version-secondsolution.txt
 
 jobs:
   deploy:
@@ -29,4 +32,5 @@ jobs:
           pac solution export --name SecondSolution --path solutions --managed false
 
       - name: Import solution to GhUAT
-        run: |          pac solution import --path solutions/SecondSolution/SecondSolution.zip --force-overwrite --publish-changes
+        run: |
+          pac solution import --path solutions/SecondSolution/SecondSolution.zip --force-overwrite --publish-changes
