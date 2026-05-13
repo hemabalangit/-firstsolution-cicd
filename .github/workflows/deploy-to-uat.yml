@@ -19,13 +19,8 @@ jobs:
 
       - name: Authenticate to Power Platform
         run: |
-          pac auth create --tenant "${{ secrets.AZURE_TENANT_ID }}" `  
-                          --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
-                          --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
-                          --environment "${{ secrets.POWER_PLATFORM_ENV_URL }}"
+          pac auth create --tenant "${{ secrets.AZURE_TENANT_ID }}" --applicationId "${{ secrets.AZURE_CLIENT_ID }}" --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" --environment "${{ secrets.POWER_PLATFORM_ENV_URL }}"
 
       - name: Import solution to GhUAT
         run: |
-          pac solution import --path solutions/FirstSolution/FirstSolution.zip `
-                              --publish-changes `
-                              --overwrite-unmanaged-customizations
+          pac solution import --path solutions/FirstSolution/FirstSolution.zip --publish-changes --overwrite-unmanaged-customizations
