@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - solutions/SecondSolution/**
+      - solutions/SecondSolution*
       - version-secondsolution.txt
 
 jobs:
