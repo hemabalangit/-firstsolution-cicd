@@ -19,29 +19,42 @@ jobs:
       - name: Install Power Platform CLI
         run: dotnet tool install --global Microsoft.PowerApps.CLI.Tool
 
-      # ---------- AUTH TO DEV (EXPORT) ----------
-      - name: Authenticate to GHDev for export
+      # ✅ CRITICAL: Clear any cached PAC auth
+      - name: Clear PAC auth
+        run: |
+          pac auth clear
+
+      # ---------- AUTH TO DEV ----------
+      - name: Authenticate to GHDev
         run: |
           pac auth create `
+            --name ghdev `
             --tenant "${{ secrets.AZURE_TENANT_ID }}" `
             --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
             --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
             --url "${{ secrets.POWER_PLATFORM_DEV_ENV_URL }}"
 
+          pac auth select --name ghdev
+
       - name: Export solution from GHDev
         run: |
           pac solution export --name SecondSolution --path solutions --managed false
 
-      # ---------- AUTH TO UAT (IMPORT) ----------
-      - name: Authenticate to GhUAT for import
+      # ---------- AUTH TO UAT ----------
+      - name: Authenticate to GhUAT
         run: |
           pac auth create `
+            --name ghuat `
             --tenant "${{ secrets.AZURE_TENANT_ID }}" `
             --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
             --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
             --url "${{ secrets.POWER_PLATFORM_UAT_ENV_URL }}"
 
+          pac auth select --name ghuat
+
       - name: Import solution to GhUAT
         run: |
           pac solution import `
             --path solutions/SecondSolution/SecondSolution.zip `
+            --force-overwrite `
+            --publish-changes
