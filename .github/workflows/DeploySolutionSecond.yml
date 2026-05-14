@@ -1,4 +1,4 @@
-name: Deploy SecondSolution to GhUAT
+name: Deploy SecondSolution to GhUAT2
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - solutions/SecondSolution/**
-      - version-secondsolution.txt
+      - version-SecondSolution.txt
 
 jobs:
   deploy:
@@ -19,42 +19,18 @@ jobs:
       - name: Install Power Platform CLI
         run: dotnet tool install --global Microsoft.PowerApps.CLI.Tool
 
-      # ✅ CRITICAL: Clear any cached PAC auth
-      - name: Clear PAC auth
-        run: |
-          pac auth clear
-
-      # ---------- AUTH TO DEV ----------
-      - name: Authenticate to GHDev
+      - name: Authenticate to Power Platform
         run: |
           pac auth create `
-            --name ghdev `
             --tenant "${{ secrets.AZURE_TENANT_ID }}" `
             --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
             --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
             --environment "${{ secrets.POWER_PLATFORM_ENV_URL }}"
 
-          pac auth select --name ghdev
-
       - name: Export solution from GHDev
         run: |
           pac solution export --name SecondSolution --path solutions --managed false
 
-      # ---------- AUTH TO UAT ----------
-      - name: Authenticate to GhUAT
-        run: |
-          pac auth create `
-            --name ghuat `
-            --tenant "${{ secrets.AZURE_TENANT_ID }}" `
-            --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
-            --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
-            --url "${{ secrets.POWER_PLATFORM_UAT_ENV_URL }}"
-
-          pac auth select --name ghuat
-
       - name: Import solution to GhUAT
         run: |
-          pac solution import `
-            --path solutions/SecondSolution/SecondSolution.zip `
-            --force-overwrite `
-            --publish-changes
+          pac solution import --path solutions/SecondSolution/SecondSolution.zip --force-overwrite --publish-changes
