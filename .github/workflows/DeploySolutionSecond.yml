@@ -32,7 +32,7 @@ jobs:
             --tenant "${{ secrets.AZURE_TENANT_ID }}" `
             --applicationId "${{ secrets.AZURE_CLIENT_ID }}" `
             --clientSecret "${{ secrets.AZURE_CLIENT_SECRET }}" `
-            --url "${{ secrets.POWER_PLATFORM_DEV_ENV_URL }}"
+            --environment "${{ secrets.POWER_PLATFORM_ENV_URL }}"
 
           pac auth select --name ghdev
 
